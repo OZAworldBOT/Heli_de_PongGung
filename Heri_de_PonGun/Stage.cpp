@@ -29,6 +29,8 @@ Stage::~Stage()
 {
 	delete water;
 	delete stage;
+
+	delete[] bubble;
 }
 
 

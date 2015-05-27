@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define BUBBLE_MAX 500
+#define BULLET_MAX 30
 
 //----------------------------------------------------
 //	インクルードファイル
@@ -28,6 +30,9 @@
 #include "Light.h"
 #include "Camera.h"
 //	Math
+
+//	Object
+#include "Bullet.h"
 
 //	Common
 #include "Common.h"

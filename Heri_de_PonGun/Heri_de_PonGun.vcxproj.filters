@@ -37,10 +37,7 @@
     <Filter Include="Class\Stage">
       <UniqueIdentifier>{df98f11b-f306-4bda-b906-0fed4ba1ce1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Class\Shot">
-      <UniqueIdentifier>{23f6f6b2-c2b8-4f4b-8372-4f9132b179e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Class\Shot\Bullet">
+    <Filter Include="Class\Bullet">
       <UniqueIdentifier>{0655ad3f-307a-4ad2-8806-6a2c579f44a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -78,11 +75,8 @@
     <ClInclude Include="Stage.h">
       <Filter>Class\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Shot.h">
-      <Filter>Class\Shot</Filter>
-    </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>Class\Shot\Bullet</Filter>
+      <Filter>Class\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,11 +113,8 @@
     <ClCompile Include="Stage.cpp">
       <Filter>Class\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Shot.cpp">
-      <Filter>Class\Shot</Filter>
-    </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>Class\Shot\Bullet</Filter>
+      <Filter>Class\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

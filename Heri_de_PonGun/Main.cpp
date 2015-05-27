@@ -14,7 +14,10 @@ using namespace std;
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int cmdShow)
 {
 	//	コンソールを開く
+#if defined (DEBUG) | defined(_DEBUG)
 	OpenConsole();
+#endif
+
 
 	//	アプリケーション実行環境を構築
 	unique_ptr<Application> app(new Application("ヘリでポン！ガン！！", Rect(0, 0, 800, 600), false, hInst, cmdShow));
@@ -22,11 +25,20 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int cmdShow)
 	unique_ptr<Player> player(new Player());
 	unique_ptr<Stage> stage(new Stage());
 
+	RECT recDisplay;
+	HWND hDeskWnd;
+	hDeskWnd = GetDesktopWindow();
+
+	GetWindowRect(hDeskWnd, &recDisplay);
+
+
+
 	while (app->Loop())
 	{
-		player->Move();
+		
 		player->Draw();
-
+		player->Shot();
+		player->Move();
 
 		stage->View();
 		//	エスケープキーを押したらゲーム終了
@@ -34,6 +46,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int cmdShow)
 		{
 			break;
 		}
+
+		ShowCursor(FALSE);
+		SetCursorPos(recDisplay.right / 2, recDisplay.bottom / 2);
 	}
 
 	return 0;

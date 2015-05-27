@@ -10,7 +10,7 @@ class Texture;
 class Graphic;
 
 //粒子のデーター
-struct b_point
+struct bullet_point
 {
 	D3DXVECTOR3 pos;			//	弾丸の座標
 	D3DXVECTOR3 accel;			//	弾丸の初速
@@ -19,15 +19,12 @@ struct b_point
 };
 
 class Bullet
-{
-	D3DXVECTOR3 Position;		//	弾丸の座標
-	D3DXVECTOR3 Rotation;		//	弾丸の回転
-	
+{	
 private:
 
 	Texture *texture;
 	Graphic *bullet;
-	b_point *bulletPoint;
+	bullet_point *bulletPoint;
 
 public:
 
@@ -38,7 +35,7 @@ public:
 	~Bullet();
 
 	//	描画する
-	void Draw();
+	void Draw(D3DXVECTOR3 Pos[]);
 
 	//	初期化
 	void InitBullet();

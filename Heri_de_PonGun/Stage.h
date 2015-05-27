@@ -5,7 +5,6 @@
 */
 #pragma once
 
-#define BUBBLE_MAX 500
 
 class Graphic;
 class Texture;
