@@ -164,7 +164,7 @@ void Player::Shot()
 				D3DXVec3Normalize(&bullet_Accel[i], &D3DXVECTOR3(rand() % 100 - 50, rand() % 100 - 50, rand() % 100 - 40));
 				bullet_Pos[i].x += (sin(bullet_Rot[i].y) * (2.0f + i) * cos(bullet_Rot[i].x)) + bullet_Accel[i].x * 0.7f;
 				bullet_Pos[i].z += (cos(bullet_Rot[i].y) * (2.0f + i) * cos(bullet_Rot[i].x)) + bullet_Accel[i].z * 0.7f;
-				bullet_Pos[i].y = Position.y + bullet_Accel[i].z * 0.5f;
+				bullet_Pos[i].y = Position.y + bullet_Accel[i].y * 0.5f;
 
 				bullet->Draw(&bullet_Pos[i]);
 			}

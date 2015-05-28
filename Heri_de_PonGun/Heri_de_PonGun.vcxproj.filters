@@ -40,6 +40,9 @@
     <Filter Include="Class\Bullet">
       <UniqueIdentifier>{0655ad3f-307a-4ad2-8806-6a2c579f44a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Class\Enemy">
+      <UniqueIdentifier>{f61bf250-2e04-4996-b114-003b53e3cc66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib.h">
@@ -78,6 +81,9 @@
     <ClInclude Include="Bullet.h">
       <Filter>Class\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Class\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -115,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Class\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Class\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
