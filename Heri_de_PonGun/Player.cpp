@@ -11,7 +11,8 @@
 
 extern LPDIRECT3DDEVICE9 d3dDevice;
 extern LPDIRECTINPUTDEVICE8 dinputDevice;
-D3DXVECTOR3 inputState;
+D3DXVECTOR3 inputState;					//	プレイヤーの座標を取得
+D3DXVECTOR3 bulletState[BULLET_MAX];	//	プレイヤーの弾の座標を取得
 
 //	コンストラクタ
 Player::Player()
@@ -51,10 +52,10 @@ void Player::InitBullet()
 {
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
-		bullet_Count[BULLET_MAX] = 0;
-		bullet_Exist[BULLET_MAX] = false;
-		bullet_Radius[BULLET_MAX] = D3DXVECTOR3(0.5, 0.5, 0.5);
+		bullet_Count[i] = 0;
+		bullet_Exist[i] = false;
 		bullet_flag = false;
+		bullet_death[i] = true;
 	}
 }
 
@@ -134,6 +135,24 @@ void Player::Move()
 //	ショット
 void Player::Shot()
 {
+	BulletShot();
+}
+
+//	描画
+void Player::Draw()
+{
+	camera->View(camera_Pos, camera_Rot);
+	player->DrawModelTexture(Position, Rotation, Scale, *model, *texture);
+}
+
+
+//-----------------------------------------------------------------------------------------------------------
+//	以下プレイヤーの攻撃関連の動作を記述
+//-----------------------------------------------------------------------------------------------------------
+
+//	弾丸のショット
+void Player::BulletShot()
+{
 	if (GetAsyncKeyState(VK_LBUTTON) && bullet_flag == false)
 	{
 		/*
@@ -160,32 +179,67 @@ void Player::Shot()
 		if (bullet_Exist[i] == true)
 		{
 			bullet_Count[i]++;
-			if (bullet_Count[i] < 50)
+			if (bullet_Count[i] < 30)
 			{
 				bullet_flag = true;
+				bullet_death[i] = false;
 				D3DXVec3Normalize(&bullet_Accel[i], &D3DXVECTOR3(rand() % 100 - 50, rand() % 100 - 50, rand() % 100 - 40));
 				bullet_Pos[i].x += (sin(bullet_Rot[i].y) * (2.0f + i) * cos(bullet_Rot[i].x)) + bullet_Accel[i].x * 0.7f;
 				bullet_Pos[i].z += (cos(bullet_Rot[i].y) * (2.0f + i) * cos(bullet_Rot[i].x)) + bullet_Accel[i].z * 0.7f;
 				bullet_Pos[i].y = Position.y + bullet_Accel[i].y * 0.5f;
 
-				bullet->Draw(&bullet_Pos[i]);
+				if (bullet_death[i] == false)
+				{
+					bullet->Draw(&bullet_Pos[i]);
+				}
+
+				Hit();
 			}
-			if (bullet_Count[i] > 50)
+			if (bullet_Count[i] > 30)
 			{
 				bullet_flag = false;
+				bullet_death[i] = true;
 				bullet_Exist[i] = false;
 				bullet_Count[i] = 0;
 			}
 		}
+		bulletState[i] = bullet_Pos[i];
 	}
+
 }
 
-//	描画
-void Player::Draw()
+//	爆弾のショット
+void Player::BombShot()
 {
-	camera->View(camera_Pos, camera_Rot);
-	player->DrawModelTexture(Position, Rotation, Scale, *model, *texture);
+
 }
+
+//	当たり判定
+void Player::Hit()
+{
+	//	敵の座標
+	extern D3DXVECTOR3 enemy_Collider[ENEMY_MAX];
+
+	for (int i = 0; i < ENEMY_MAX; i++)
+	{
+		for (int j = 0; j < BULLET_MAX; j++)
+		{
+			enemy_Radius[i] = 10.0f;
+			bullet_Radius[j] = 0.5f;
+
+			if ((enemy_Collider[i].x - bullet_Pos[j].x) * (enemy_Collider[i].x - bullet_Pos[j].x) +
+				(enemy_Collider[i].y - bullet_Pos[j].y) * (enemy_Collider[i].y - bullet_Pos[j].y) +
+				(enemy_Collider[i].z - bullet_Pos[j].z) * (enemy_Collider[i].z - bullet_Pos[j].z) <=
+				(bullet_Radius[j] + enemy_Radius[i]) * (bullet_Radius[j] + enemy_Radius[i]))
+			{
+				bullet_death[i] = true;
+			}
+
+		}
+	}
+
+}
+
 
 
 

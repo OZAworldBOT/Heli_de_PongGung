@@ -10,14 +10,14 @@
 
 
 extern LPDIRECT3DDEVICE9 d3dDevice;
-
+D3DXVECTOR3 enemy_Collider[ENEMY_MAX];
 
 //	コンストラクタ
 Enemy::Enemy()
 {
 	enemy = new Graphic[ENEMY_MAX];
 	model = new Model("Model/tako.x");
-	texture = new Texture("Texture/enemy2.png");
+	texture = new Texture("Texture/gold_block.png");
 	bullet = new Bullet();
 
 	DebugLog("敵を生成しました。\n");
@@ -48,6 +48,8 @@ void Enemy::InitEnemy()
 		Position[i].z = (float)((double)rand() / RAND_MAX * range.z) + MinRange.z;
 		Rotation[i] = D3DXVECTOR3(0, 0, 0);
 		Scale[i] = D3DXVECTOR3(10, 10, 10);
+		Vitality[i] = 50;
+		enemyDeathFlag[i] = false;
 
 		DebugLog("敵を初期化しました。\n");
 	}
@@ -58,9 +60,8 @@ void Enemy::InitBullet()
 {
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
-		bullet_Count[BULLET_MAX] = 0;
-		bullet_Exist[BULLET_MAX] = false;
-		bullet_Radius[BULLET_MAX] = D3DXVECTOR3(0.5, 0.5, 0.5);
+		bullet_Count[i] = 0;
+		bullet_Exist[i] = false;
 		bullet_flag = false;
 	}
 }
@@ -93,11 +94,45 @@ void Enemy::Shot()
 
 }
 
+//	当たり判定
+void Enemy::Hit()
+{
+	//	プレイヤーの弾の座標
+	extern D3DXVECTOR3 bulletState[BULLET_MAX];
+
+	for (int i = 0; i < ENEMY_MAX; i++)
+	{
+		for (int j = 0; j < BULLET_MAX; j++)
+		{
+			Collider[i] = Position[i];
+			enemy_Collider[i] = Collider[i];
+			bullet_Collider[j] = bulletState[j];
+			Radius[i] = 10.0f;
+			bullet_Radius[j] = 0.5f;
+
+			if ((Collider[i].x - bullet_Collider[j].x) * (Collider[i].x - bullet_Collider[j].x) +
+				(Collider[i].y - bullet_Collider[j].y) * (Collider[i].y - bullet_Collider[j].y) +
+				(Collider[i].z - bullet_Collider[j].z) * (Collider[i].z - bullet_Collider[j].z) <=
+				(bullet_Radius[j] + Radius[i]) * (bullet_Radius[j] + Radius[i]))
+			{
+				Vitality[i] -= 1;
+			}
+		}
+		if (Vitality[i] < 0)
+		{
+			enemyDeathFlag[i] = true;
+		}
+	}
+}
+
 //	敵の描画
 void Enemy::Draw()
 {
 	for (int i = 0; i < ENEMY_MAX; i++)
 	{
-		enemy[i].DrawModelTexture(Position[i], Rotation[i], Scale[i], *model, *texture);
+		if (enemyDeathFlag[i] == false)
+		{
+			enemy[i].DrawModelTexture(Position[i], Rotation[i], Scale[i], *model, *texture);
+		}
 	}
 }
