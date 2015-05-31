@@ -13,20 +13,30 @@ extern LPDIRECT3DDEVICE9 d3dDevice;
 extern LPDIRECTINPUTDEVICE8 dinputDevice;
 D3DXVECTOR3 inputState;					//	プレイヤーの座標を取得
 D3DXVECTOR3 bulletState[BULLET_MAX];	//	プレイヤーの弾の座標を取得
+D3DXVECTOR3 bombState[BOMB_MAX];		//	プレイヤーの爆弾の座標を取得
 
 //	コンストラクタ
 Player::Player()
 {
 	camera = new Camera();
 	player = new Graphic();
-	model = new Model("Model/Heli.x");
-	texture = new Texture("Texture/enemy2.png");
+	tako = new Graphic();
+
+	model = new Model[2];
+	model[0].LoadMesh("Model/Heli.x");
+	model[1].LoadMesh("Model/tako.x");
+	texture = new Texture[2];
+	texture[0].LoadTexture("Texture/enemy2.png");
+	texture[1].LoadTexture("Texture/RedSkin.png");
+
 	bullet = new Bullet();
+	bomb = new Bomb();
 
 	DebugLog("プレイヤーを生成しました。\n");
 
 	InitPlayer();
 	InitBullet();
+	InitBomb();
 }
 
 //	デストラクタ
@@ -59,14 +69,23 @@ void Player::InitBullet()
 	}
 }
 
+void Player::InitBomb()
+{
+		bomb_Exist = false;
+		bomb_flag = false;
+		bomb_death = true;
+}
+
 //	解放処理
 void Player::Release()
 {
 	delete camera;
 	delete player;
-	delete model;
-	delete texture;
+	delete tako;
+	delete[] model;
+	delete[] texture;
 	delete bullet;
+	delete bomb;
 }
 
 //	動作
@@ -109,13 +128,13 @@ void Player::Move()
 		}
 		
 		camera_Rot.x += dims.lY * 0.005f;
-		if (camera_Rot.x < D3DXToRadian(0))
+		if (camera_Rot.x < D3DXToRadian(5))
 		{
-			camera_Rot.x = D3DXToRadian(0);
+			camera_Rot.x = D3DXToRadian(5);
 		}
-		if (camera_Rot.x > D3DXToRadian(30))
+		if (camera_Rot.x > D3DXToRadian(5))
 		{
-			camera_Rot.x = D3DXToRadian(30);
+			camera_Rot.x = D3DXToRadian(5);
 		}
 
 	}
@@ -136,13 +155,14 @@ void Player::Move()
 void Player::Shot()
 {
 	BulletShot();
+	BombShot();
 }
 
 //	描画
 void Player::Draw()
 {
 	camera->View(camera_Pos, camera_Rot);
-	player->DrawModelTexture(Position, Rotation, Scale, *model, *texture);
+	player->DrawModelTexture(Position, Rotation, Scale, model[0], texture[0]);
 }
 
 
@@ -202,6 +222,10 @@ void Player::BulletShot()
 				bullet_Exist[i] = false;
 				bullet_Count[i] = 0;
 			}
+			if (bullet_death[i] == true)
+			{
+				bullet_Pos[i].y = 1000.0f;
+			}
 		}
 		bulletState[i] = bullet_Pos[i];
 	}
@@ -211,7 +235,48 @@ void Player::BulletShot()
 //	爆弾のショット
 void Player::BombShot()
 {
+	if (GetAsyncKeyState(VK_RBUTTON) && bomb_flag == false)
+	{
+		srand((unsigned int)time(NULL));
 
+		/*
+		*	左クリック＆＆bomb_flagがfalseのときに初期化されるもの
+		*/
+		bomb_Pos.x = oldPlayerPos.x;
+		bomb_Pos.z = oldPlayerPos.z + 0.5f;
+		bomb_Pos.y = Position.y + 2.0f;
+		bomb_Rot.y = oldPlayerRot.y;
+		bomb_Rot.x = oldCameraRot.x;
+
+		bomb_Exist = true;
+	}
+
+		/*
+		*	弾の処理を記述	泡のように見せるため乱数とD3DXVec3Normalizeを使用
+		*/
+
+	if (bomb_Exist == true)
+	{
+		bomb_flag = true;
+		bomb_death = false;
+		timeCount += 0.5f;
+		bomb_Pos.y -= 0.5f + (timeCount * sin(bomb_Rot.x) - 1.5f);
+		bomb_Pos.x += (sin(bomb_Rot.y) * (2.0f) * cos(bomb_Rot.x));
+		bomb_Pos.z += (cos(bomb_Rot.y) * (2.0f) * cos(bomb_Rot.x));
+
+		//bomb->Draw(&bomb_Pos[i]);
+		tako->DrawModelTexture(bomb_Pos, bomb_Rot, D3DXVECTOR3(2, 2, 2), model[1], texture[1]);
+
+		Hit();
+		if (bomb_Pos.y < 0)
+		{
+			bomb_flag = false;
+			bomb_death = true;
+			bomb_Exist = false;
+			timeCount = 0;
+
+		}
+	}
 }
 
 //	当たり判定
