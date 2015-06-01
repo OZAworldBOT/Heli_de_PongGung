@@ -12,7 +12,8 @@
 //----------------------------------------------------
 #define BUBBLE_MAX 600			//	泡の最大個数
 #define BULLET_MAX 30			//	プレイヤーの弾の最大個数
-#define BOMB_MAX 50				//	プレイヤーの爆弾の最大個数
+#define BOMB_MAX 100				//	プレイヤーの爆弾の最大個数
+#define RAZER_MAX 200			//	プレイヤーのレーザーの最大個数
 #define ENEMY_MAX 30			//	敵の最大個数
 
 //----------------------------------------------------
@@ -39,6 +40,7 @@
 //	Object
 #include "Bullet.h"
 #include "Bomb.h"
+#include "Razer.h"
 
 //	Common
 #include "Common.h"

@@ -12,7 +12,6 @@ Bomb::Bomb()
 	for (int i = 0; i < BOMB_MAX; i++)
 	{
 		bombPoint[i].deathCount = 0;
-		//bombPoint[i].pos = D3DXVECTOR3(0, 0, 0);
 		bombPoint[i].exist = TRUE;
 	}
 	texture = new Texture("Texture/ball.bmp");
@@ -27,7 +26,7 @@ Bomb::~Bomb()
 	delete[] bombPoint;
 }
 
-void Bomb::Draw(D3DXVECTOR3 Pos[])
+void Bomb::Draw(D3DXVECTOR3 Pos[], float Size, bool Alpha)
 {
 	Vertex3 *vertex = new Vertex3[BOMB_MAX];
 
@@ -36,11 +35,11 @@ void Bomb::Draw(D3DXVECTOR3 Pos[])
 		bombPoint[i].pos = Pos[i];
 
 		vertex[i].pos = bombPoint[i].pos;
-		vertex[i].size = 1.0f;
+		vertex[i].size = Size;
 		vertex[i].color = 0xffffffff;
 
 	}
 
-	bomb->DrawPointSprite(vertex, BOMB_MAX, *texture);
+	bomb->DrawPointSprite_A(vertex, BOMB_MAX, *texture, Alpha);
 	delete[] vertex;
 }

@@ -37,21 +37,16 @@ class Enemy
 	D3DXVECTOR3 MaxRange;					//	“GoŒ»‚ÌÅ‘å”ÍˆÍ
 	D3DXVECTOR3 MinRange;					//	“GoŒ»‚ÌÅ¬”ÍˆÍ
 	int			Vitality[ENEMY_MAX];		//	“G‚Ì‘Ì—Í
-	float Radius[ENEMY_MAX];				//	“G‚Ì”¼Œa
-	bool enemyDeathFlag[ENEMY_MAX];			//	“G‚ª¶‚«‚Ä‚é‚©‚Ç‚¤‚©
+	float		Radius[ENEMY_MAX];			//	“G‚Ì”¼Œa
+	bool		enemyDeathFlag[ENEMY_MAX];	//	“G‚ª¶‚«‚Ä‚é‚©‚Ç‚¤‚©
 
 	//-----------------------------------------------------
 	//	UŒ‚ŠÖ˜A
 	//-----------------------------------------------------
-	D3DXVECTOR3 bullet_Pos[BULLET_MAX];			//	’e‚ÌÀ•W
-	D3DXVECTOR3 bullet_Rot[BULLET_MAX];			//	’e‚ÌŒX‚«
-	D3DXVECTOR3 bullet_Accel[BULLET_MAX];		//	’e‚Ì‰‘¬
-	D3DXVECTOR3 bullet_Collider[BULLET_MAX];		//	’e‚Ì’†SÀ•W
-	float		bullet_Radius[BULLET_MAX];		//	’e‚Ì”¼Œa
-	int			bullet_Count[BULLET_MAX];		//	’e‚Ì¶‘¶ŠÔ
-	bool		bullet_Exist[BULLET_MAX];		//	’e‚ª¶‚«‚Ä‚é‚©‚Ç‚¤‚©
-	bool		bullet_flag;					//	’e‚Ì§Œäƒtƒ‰ƒO
-
+	float		bullet_Radius[BULLET_MAX];		//	’eŠÛ‚Ì”¼Œa
+	float		razer_Radius[RAZER_MAX];		//	ƒŒ[ƒU[‚Ì”¼Œa
+	float		bomb_Radius[BOMB_MAX];			//	”š’e‚Ì”¼Œa
+	
 private:
 
 	float cameraAngle;		//ƒJƒƒ‰‚ÌŠp“x

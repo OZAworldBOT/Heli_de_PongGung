@@ -36,7 +36,7 @@ public:
 	~Bomb();
 
 	//	•`‰æ‚·‚é
-	void Draw(D3DXVECTOR3 Pos[]);
+	void Draw(D3DXVECTOR3 Pos[], float Size, bool Alpha);
 
 	//	‰Šú‰»
 	void InitBullet();

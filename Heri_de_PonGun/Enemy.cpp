@@ -35,8 +35,8 @@ Enemy::~Enemy()
 //	“G‚Ì‰Šú‰»
 void Enemy::InitEnemy()
 {
-	MinRange = D3DXVECTOR3(-250, 0, -250);
-	MaxRange = D3DXVECTOR3(250, 10, 250);
+	MinRange = D3DXVECTOR3(750, 0, 750);
+	MaxRange = D3DXVECTOR3(1250, 10, 1250);
 	D3DXVECTOR3 range = MaxRange - MinRange;
 
 	srand((unsigned int)time(NULL));
@@ -48,7 +48,7 @@ void Enemy::InitEnemy()
 		Position[i].z = (float)((double)rand() / RAND_MAX * range.z) + MinRange.z;
 		Rotation[i] = D3DXVECTOR3(0, 0, 0);
 		Scale[i] = D3DXVECTOR3(10, 10, 10);
-		Vitality[i] = 50;
+		Vitality[i] = 100;
 		enemyDeathFlag[i] = false;
 
 		DebugLog("“G‚ğ‰Šú‰»‚µ‚Ü‚µ‚½B\n");
@@ -58,12 +58,6 @@ void Enemy::InitEnemy()
 //	“G‚Ì’e‚Ì‰Šú‰»
 void Enemy::InitBullet()
 {
-	for (int i = 0; i < BULLET_MAX; i++)
-	{
-		bullet_Count[i] = 0;
-		bullet_Exist[i] = false;
-		bullet_flag = false;
-	}
 }
 
 //	‰ğ•úˆ—
@@ -99,20 +93,23 @@ void Enemy::Hit()
 {
 	//	ƒvƒŒƒCƒ„[‚Ì’e‚ÌÀ•W
 	extern D3DXVECTOR3 bulletState[BULLET_MAX];
+	extern D3DXVECTOR3 bombState[BOMB_MAX];
+	extern D3DXVECTOR3 razerState[RAZER_MAX];
 
+	//----------------------------------------------------------------
+	//	’eŠÛ‚Æ‚Ì“–‚½‚è”»’è
+	//----------------------------------------------------------------
 	for (int i = 0; i < ENEMY_MAX; i++)
 	{
 		for (int j = 0; j < BULLET_MAX; j++)
 		{
 			Collider[i] = Position[i];
-			enemy_Collider[i] = Collider[i];
-			bullet_Collider[j] = bulletState[j];
 			Radius[i] = 10.0f;
 			bullet_Radius[j] = 0.5f;
 
-			if ((Collider[i].x - bullet_Collider[j].x) * (Collider[i].x - bullet_Collider[j].x) +
-				(Collider[i].y - bullet_Collider[j].y) * (Collider[i].y - bullet_Collider[j].y) +
-				(Collider[i].z - bullet_Collider[j].z) * (Collider[i].z - bullet_Collider[j].z) <=
+			if ((Collider[i].x - bulletState[j].x) * (Collider[i].x - bulletState[j].x) +
+				(Collider[i].y - bulletState[j].y) * (Collider[i].y - bulletState[j].y) +
+				(Collider[i].z - bulletState[j].z) * (Collider[i].z - bulletState[j].z) <=
 				(bullet_Radius[j] + Radius[i]) * (bullet_Radius[j] + Radius[i]))
 			{
 				Vitality[i] -= 1;
@@ -123,6 +120,57 @@ void Enemy::Hit()
 			enemyDeathFlag[i] = true;
 		}
 	}
+
+	//----------------------------------------------------------------
+	//	”š’e‚Æ‚Ì“–‚½‚è”»’è
+	//----------------------------------------------------------------
+	for (int i = 0; i < ENEMY_MAX; i++)
+	{
+		for (int j = 0; j < BOMB_MAX; j++)
+		{
+			Collider[i] = Position[i];
+			Radius[i] = 10.0f;
+			bomb_Radius[j] = 0.5f;
+
+			if ((Collider[i].x - bombState[j].x) * (Collider[i].x - bombState[j].x) +
+				(Collider[i].y - bombState[j].y) * (Collider[i].y - bombState[j].y) +
+				(Collider[i].z - bombState[j].z) * (Collider[i].z - bombState[j].z) <=
+				(bomb_Radius[j] + Radius[i]) * (bomb_Radius[j] + Radius[i]))
+			{
+				Vitality[i] -= 1;
+			}
+		}
+		if (Vitality[i] < 0)
+		{
+			enemyDeathFlag[i] = true;
+		}
+	}
+
+	//----------------------------------------------------------------
+	//	ƒŒ[ƒU[‚Æ‚Ì“–‚½‚è”»’è
+	//----------------------------------------------------------------
+	for (int i = 0; i < ENEMY_MAX; i++)
+	{
+		for (int j = 0; j < RAZER_MAX; j++)
+		{
+			Collider[i] = Position[i];
+			Radius[i] = 10.0f;
+			razer_Radius[j] = 0.5f;
+
+			if ((Collider[i].x - razerState[j].x) * (Collider[i].x - razerState[j].x) +
+				(Collider[i].y - razerState[j].y) * (Collider[i].y - razerState[j].y) +
+				(Collider[i].z - razerState[j].z) * (Collider[i].z - razerState[j].z) <=
+				(razer_Radius[j] + Radius[i]) * (razer_Radius[j] + Radius[i]))
+			{
+				Vitality[i] -= 1;
+			}
+		}
+		if (Vitality[i] < 0)
+		{
+			enemyDeathFlag[i] = true;
+		}
+	}
+
 }
 
 //	“G‚Ì•`‰æ
